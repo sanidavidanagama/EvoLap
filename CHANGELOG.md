@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.1] — 2026-10-09
+
+### Added
+
+- **Speed-Dependent Steering Kinematics (`physics/steering.py`)**:
+  - `SteeringConfig`: Tunable physical parameters governing dynamic wheel deflection, aerodynamic downforce grip limits, rack resistance build-up rates, and self-aligning torque centering.
+  - `SteeringModel`: Kinematic steering engine implementing realistic Formula 1 handling:
+    - **Low-speed maneuvering**: Full $0.50\text{ rad}$ ($\sim 28.6^\circ$) steering lock available below $30\text{ km/h}$ for hairpins, chicanes, and tight technical sections.
+    - **Aerodynamic high-speed stability**: Maximum front wheel angle continuously constrained by the aerodynamic lateral grip envelope ($a_{\text{lat}} \le 5.2\text{ G}$), tapering to $\sim 1.2^\circ$ at $340\text{ km/h}$. Full $\pm 1.0$ input at top speed produces stable micro-adjustments rather than violent snap oversteer.
+    - **Aerodynamic rack resistance**: Dynamic build-up rate scaling inversely with dynamic pressure ($q \propto v^2$), transitioning from fast, agile response ($3.8\text{ rad/s}$) at low speed to progressive, heavily-weighted resistance ($1.6\text{ rad/s}$) at top speed.
+    - **Self-aligning torque**: Rapid auto-centering ($5.6\text{ rad/s}$) when steering keys are released, instantly stabilizing the car on corner exits.
+
+### Changed
+
+- **Vehicle Dynamics Integration (`physics/dynamics.py`)**:
+  - Updated `VehicleConfig` to incorporate `SteeringConfig`.
+  - Refactored `VehicleDynamics.step()` to delegate lateral wheel deflection and rate limiting to `SteeringModel`, maintaining 100% headless determinism and zero Pygame dependencies.
+
+---
+
 ## [0.1.0] — 2026-10-09
 
 ### Added

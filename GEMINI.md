@@ -6,8 +6,8 @@ Welcome to **EvoLap**. This document contains mandatory architectural invariants
 
 ## Active Milestone (Read This First)
 
-- **Currently Developing Milestone**: [`docs/milestones/v0.1.0-basic-simulation.md`](file:///c:/Users/sanid/VS%20Code%20Projects/EvoLap/docs/milestones/v0.1.0-basic-simulation.md)
-- **Scope Rule**: Strictly adhere to the checklist in the active milestone document. **Do not implement features belonging to future milestones** (e.g., do not add neural networks, sidebars, or genetic algorithms during v0.1.0).
+- **Currently Developing Milestone**: [`docs/milestones/v0.1.1-smooth-steering.md`](file:///c:/Users/sanid/VS%20Code%20Projects/EvoLap/docs/milestones/v0.1.1-smooth-steering.md)
+- **Scope Rule**: Strictly adhere to the checklist in the active milestone document. **Do not implement features belonging to future milestones** (e.g., do not add neural networks, sidebars, or genetic algorithms during v0.1.1).
 
 ---
 
