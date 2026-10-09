@@ -58,14 +58,19 @@ The persistence engine (`storage/`) must strictly preserve three dedicated direc
 
 ## Milestone Evolution & Backlog Notes
 
-### Planned for v0.1.1 (Targeted immediately after v0.1.0 release):
-- **Smooth Speed-Dependent Steering (F1 Kinematics)**: 
-  - Dynamic steering response inversely scaled with vehicle speed.
-  - Low speeds: full steering lock available for sharp hairpins and slow maneuvers.
-  - High speeds: steering deflection is dynamically constrained and smoothed so full ($\pm 1.0$) input produces only high-speed, stable micro-adjustments rather than violent snap oversteer, mirroring real Formula 1 aerodynamic loading and physical steering resistance.
+### Completed in v0.1.1:
+- **Smooth Speed-Dependent Steering (F1 Kinematics)**: Full steering lock at low speeds tapering down to micro-adjustments at top speed.
+- **Active Brake Priority**: Dedicated braking input strictly prioritized over throttle.
+- **Branding & Standalone Build**: Added custom favicon application icons, standalone executable compilation script (`scripts/build.py`), and CI workflow.
 
 ### Planned for v0.1.2+:
 - **Damage & Impact Degradation System**: Progressive wing/chassis degradation, speed penalties, and collision restitution replacing instantaneous binary elimination (`status = "Out"`).
+
+### Planned for v0.2.0 (Neural Engine & CI Optimization):
+- **CI Pipeline Streamlining & Release Separation**:
+  - Restructure `.github/workflows/ci.yml` into a lightweight, fast Ubuntu test runner (<30s runtime).
+  - Add concurrency cancellation (`cancel-in-progress: true`) and doc change filtering (`paths-ignore`).
+  - Separate executable compilation into a dedicated tag-triggered `release.yml` (`v*`) to eliminate redundant matrix and Windows runner queue consumption across routine dev pushes and PRs.
 
 ---
 

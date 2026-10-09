@@ -21,6 +21,20 @@ Each milestone builds upon decoupled engines without requiring future features t
 
 ---
 
+## v0.1.1 — Smooth Steering & Standalone Deployment (Completed - Released)
+
+- **Status**: Completed (2026-10-09)
+- **Scope**: F1 dynamic steering kinematics, brake input priority, custom application branding, standalone executable packaging, and automated CI.
+- **Engines Involved**: `physics`, `simulation`, `rendering`, `scripts`, `.github`.
+- **Capabilities**:
+  - Dynamic speed-dependent steering lock ($35^\circ$ low speed down to $4.9^\circ$ micro-adjustments at $340\text{ km/h}$).
+  - Active brake priority invariant over accelerator and prohibition of reverse motion.
+  - Standardized Apex Valley track loading and geometry without overlaps.
+  - Custom application branding embedded into Windows executable and Pygame runtime.
+  - One-command standalone build script (`scripts/build.py`) and GitHub Actions CI workflow.
+
+---
+
 ## v0.2.0 — Neural Engine & Multi-Car Simulation
 
 - **Scope**: 20 AI-controlled cars running concurrently with random weights.
