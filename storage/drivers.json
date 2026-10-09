@@ -1,0 +1,162 @@
+[
+  {
+    "id": "VER",
+    "name": "Max Verstappen",
+    "number": 1,
+    "team": "Red Bull Racing",
+    "livery_colors": ["#1E41FF", "#DC0000"],
+    "nationality": "NED"
+  },
+  {
+    "id": "PER",
+    "name": "Sergio Perez",
+    "number": 11,
+    "team": "Red Bull Racing",
+    "livery_colors": ["#1E41FF", "#FFD700"],
+    "nationality": "MEX"
+  },
+  {
+    "id": "HAM",
+    "name": "Lewis Hamilton",
+    "number": 44,
+    "team": "Ferrari",
+    "livery_colors": ["#DC0000", "#FFFFFF"],
+    "nationality": "GBR"
+  },
+  {
+    "id": "LEC",
+    "name": "Charles Leclerc",
+    "number": 16,
+    "team": "Ferrari",
+    "livery_colors": ["#DC0000", "#000000"],
+    "nationality": "MON"
+  },
+  {
+    "id": "NOR",
+    "name": "Lando Norris",
+    "number": 4,
+    "team": "McLaren",
+    "livery_colors": ["#FF8000", "#00A0DE"],
+    "nationality": "GBR"
+  },
+  {
+    "id": "PIA",
+    "name": "Oscar Piastri",
+    "number": 81,
+    "team": "McLaren",
+    "livery_colors": ["#FF8000", "#111111"],
+    "nationality": "AUS"
+  },
+  {
+    "id": "RUS",
+    "name": "George Russell",
+    "number": 63,
+    "team": "Mercedes",
+    "livery_colors": ["#00A19B", "#000000"],
+    "nationality": "GBR"
+  },
+  {
+    "id": "ANT",
+    "name": "Kimi Antonelli",
+    "number": 12,
+    "team": "Mercedes",
+    "livery_colors": ["#00A19B", "#FFFFFF"],
+    "nationality": "ITA"
+  },
+  {
+    "id": "ALO",
+    "name": "Fernando Alonso",
+    "number": 14,
+    "team": "Aston Martin",
+    "livery_colors": ["#00594F", "#CEDC00"],
+    "nationality": "ESP"
+  },
+  {
+    "id": "STR",
+    "name": "Lance Stroll",
+    "number": 18,
+    "team": "Aston Martin",
+    "livery_colors": ["#00594F", "#FFFFFF"],
+    "nationality": "CAN"
+  },
+  {
+    "id": "GAS",
+    "name": "Pierre Gasly",
+    "number": 10,
+    "team": "Alpine",
+    "livery_colors": ["#0090FF", "#FF87BC"],
+    "nationality": "FRA"
+  },
+  {
+    "id": "DOO",
+    "name": "Jack Doohan",
+    "number": 7,
+    "team": "Alpine",
+    "livery_colors": ["#FF87BC", "#0090FF"],
+    "nationality": "AUS"
+  },
+  {
+    "id": "ALB",
+    "name": "Alexander Albon",
+    "number": 23,
+    "team": "Williams",
+    "livery_colors": ["#005AFF", "#041E42"],
+    "nationality": "THA"
+  },
+  {
+    "id": "SAI",
+    "name": "Carlos Sainz",
+    "number": 55,
+    "team": "Williams",
+    "livery_colors": ["#005AFF", "#FFC72C"],
+    "nationality": "ESP"
+  },
+  {
+    "id": "TSU",
+    "name": "Yuki Tsunoda",
+    "number": 22,
+    "team": "Racing Bulls",
+    "livery_colors": ["#1634CB", "#FFFFFF"],
+    "nationality": "JPN"
+  },
+  {
+    "id": "LAW",
+    "name": "Liam Lawson",
+    "number": 30,
+    "team": "Racing Bulls",
+    "livery_colors": ["#1634CB", "#D81E05"],
+    "nationality": "NZL"
+  },
+  {
+    "id": "HUL",
+    "name": "Nico Hulkenberg",
+    "number": 27,
+    "team": "Kick Sauber",
+    "livery_colors": ["#52E252", "#000000"],
+    "nationality": "GER"
+  },
+  {
+    "id": "BOR",
+    "name": "Gabriel Bortoleto",
+    "number": 5,
+    "team": "Kick Sauber",
+    "livery_colors": ["#52E252", "#FFFFFF"],
+    "nationality": "BRA"
+  },
+  {
+    "id": "OCO",
+    "name": "Esteban Ocon",
+    "number": 31,
+    "team": "Haas",
+    "livery_colors": ["#E6002B", "#FFFFFF"],
+    "nationality": "FRA"
+  },
+  {
+    "id": "BEA",
+    "name": "Oliver Bearman",
+    "number": 87,
+    "team": "Haas",
+    "livery_colors": ["#E6002B", "#000000"],
+    "nationality": "GBR"
+  }
+]

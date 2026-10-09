@@ -1,7 +1,7 @@
 [project]
 name = "evolap"
 version = "0.1.0"
-description = "Add your description here"
+description = "A modular 2D Formula 1 simulation and evolutionary AI driving laboratory"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
