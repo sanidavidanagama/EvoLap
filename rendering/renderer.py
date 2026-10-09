@@ -32,6 +32,7 @@ class Renderer:
         pygame.init()
         pygame.font.init()
         pygame.display.set_caption("EvoLap — Formula 1 Simulation & AI Driving Laboratory")
+        self._set_window_icon()
 
         self.fullscreen = fullscreen
         self.window_size = window_size
@@ -64,6 +65,37 @@ class Renderer:
         self.font_hint = pygame.font.SysFont("Segoe UI, Arial", 12)
 
         self._track_fitted = False
+
+    @staticmethod
+    def _set_window_icon() -> None:
+        """Sets the application window and taskbar icon from assets/favicon.png."""
+        import sys
+        from pathlib import Path
+
+        # Explicit Windows AppUserModelID ensures taskbar groups icon correctly
+        try:
+            import ctypes
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("sanidavidanagama.evolap.sim.v011")
+        except Exception:
+            pass
+
+        candidates = [
+            Path("assets/favicon.png"),
+            Path(__file__).resolve().parent.parent / "assets" / "favicon.png",
+        ]
+        if getattr(sys, "frozen", False):
+            if hasattr(sys, "_MEIPASS"):
+                candidates.insert(0, Path(sys._MEIPASS) / "assets" / "favicon.png")
+            candidates.insert(0, Path(sys.executable).parent / "assets" / "favicon.png")
+
+        for path in candidates:
+            if path.is_file():
+                try:
+                    icon_surf = pygame.image.load(str(path))
+                    pygame.display.set_icon(icon_surf)
+                    return
+                except Exception:
+                    pass
 
     def toggle_fullscreen(self) -> None:
         """Toggles between fullscreen and resizable window."""
