@@ -1,6 +1,7 @@
 """Simulation layer coordinator, track representation, and car entities."""
 
 from simulation.car import Car
+from simulation.controls import resolve_control_inputs
 from simulation.track import Checkpoint, SpawnConfig, Track, TrackConfig
 from simulation.world import World
 
@@ -11,4 +12,5 @@ __all__ = [
     "Checkpoint",
     "Car",
     "World",
+    "resolve_control_inputs",
 ]

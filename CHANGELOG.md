@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Vehicle Dynamics Integration (`physics/dynamics.py`)**:
   - Updated `VehicleConfig` to incorporate `SteeringConfig`.
   - Refactored `VehicleDynamics.step()` to delegate lateral wheel deflection and rate limiting to `SteeringModel`, maintaining 100% headless determinism and zero Pygame dependencies.
+- **Control Input Priority (`simulation/controls.py`, `main.py`)**:
+  - Implemented `resolve_control_inputs()` enforcing strict braking precedence over accelerator. If accelerator (`W` / `Up`) and brake (`SPACE` / `S` / `Down`) are held simultaneously, active braking strictly supersedes throttle.
 
 ---
 
