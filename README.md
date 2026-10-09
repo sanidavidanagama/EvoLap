@@ -53,7 +53,10 @@ cd EvoLap
 uv venv
 
 # Activate the virtual environment
-.scripts/Activate
+.venv/Scripts/Activate
+
+# Install dependencies
+uv sync
 
 # Run the simulation game directly
 uv run main.py
