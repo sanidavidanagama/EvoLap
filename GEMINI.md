@@ -30,15 +30,15 @@ $$\text{Track Geometry} \to \text{Simulation World} \to \text{Physics Engine} \t
 
 ### 2. Zero Pygame in Headless Layers (Strict Decoupling)
 - The following modules must **NEVER import `pygame` or `rendering`**:
-  - `evolap/core/`
-  - `evolap/physics/`
-  - `evolap/simulation/`
-  - `evolap/neural_engine/`
-  - `evolap/training/`
+  - `core/`
+  - `physics/`
+  - `simulation/`
+  - `neural_engine/`
+  - `training/`
 - Every simulation step must be executable in a pure console script without launching an OS window or initializing display drivers.
 
 ### 3. Neural Engine is an Independent Sub-Product
-- Located in `evolap/neural_engine/`.
+- Located in `neural_engine/`.
 - Designed as a standalone, scalable sub-product with independent semantic subversioning (e.g., `Neural Engine v1.0.0`).
 - Operates on pure NumPy for vector math and neural inference.
 
