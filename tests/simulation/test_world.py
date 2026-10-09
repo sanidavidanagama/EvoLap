@@ -80,7 +80,7 @@ class TestWorld:
         assert world.player_car.is_running()
 
     def test_world_barrier_collision_handling(self):
-        track = Track.create_monaco_test_circuit()
+        track = Track.load("apex_valley")
         world = World.create_default(track=track)
 
         # Move car straight into the barrier at full speed
@@ -109,7 +109,7 @@ class TestWorld:
         assert world.player_car.status == "Running"
 
     def test_multi_car_controls(self):
-        track = Track.create_monaco_test_circuit()
+        track = Track.load("apex_valley")
         car1 = Car.create(car_id=1, spawn_pos=track.spawn_position, spawn_heading=0.0)
         car2 = Car.create(car_id=2, spawn_pos=track.spawn_position, spawn_heading=0.0)
         world = World(track=track, cars=[car1, car2])

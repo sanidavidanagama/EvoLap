@@ -33,7 +33,7 @@ class World:
 
     @classmethod
     def create_default(cls, track: Optional[Track] = None) -> World:
-        trk = track if track is not None else Track.create_monaco_test_circuit()
+        trk = track if track is not None else Track.load("apex_valley")
         if trk.grid_slots:
             spawn_pos, spawn_h = trk.grid_slots[0]
         else:

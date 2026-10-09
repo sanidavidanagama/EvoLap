@@ -117,7 +117,7 @@ class TestVehiclePhysics:
         assert len(segs) == 4
 
     def test_barrier_collision_and_crash_transition(self):
-        track = Track.create_monaco_test_circuit()
+        track = Track.load("apex_valley")
         # Place car directly intersecting inner barrier
         barrier_pt = track.inner_segments[0].midpoint()
         state = VehicleState(position=barrier_pt, heading=0.0, speed=50.0)
@@ -153,7 +153,7 @@ class TestVehiclePhysics:
 
     def test_headless_simulation_determinism(self):
         """Simulates identical control sequences and verifies 100% deterministic bit-exact outputs."""
-        track = Track.create_monaco_test_circuit()
+        track = Track.load("apex_valley")
 
         def run_sim():
             state = VehicleState(position=track.spawn_position, heading=track.spawn_heading)

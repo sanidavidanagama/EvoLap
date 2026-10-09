@@ -16,7 +16,7 @@ def run_headless_simulation():
     print("EvoLap Headless Physics Verification")
     print("=" * 60)
 
-    track = Track.create_monaco_test_circuit()
+    track = Track.load("apex_valley")
     state = VehicleState(position=track.spawn_position, heading=track.spawn_heading)
 
     print(f"Track: {track.name}")

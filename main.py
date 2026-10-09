@@ -17,8 +17,8 @@ from simulation.world import World
 
 
 def load_circuit() -> Track:
-    """Loads the verified Grand Prix circuit with 120px width and smooth curves."""
-    return Track.create_monaco_test_circuit()
+    """Loads the verified Apex Valley circuit from storage/tracks/apex_valley.json."""
+    return Track.load("apex_valley")
 
 
 def main() -> None:

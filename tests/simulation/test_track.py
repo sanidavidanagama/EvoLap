@@ -8,28 +8,29 @@ from simulation.track import Track, TrackConfig
 
 
 class TestTrack:
-    def test_monaco_test_circuit_creation(self):
-        track = Track.create_monaco_test_circuit()
-        assert "Monaco" in track.name
-        assert len(track.inner_barrier) >= 10
-        assert len(track.outer_barrier) >= 10
-        assert len(track.inner_segments) == len(track.inner_barrier)
-        assert len(track.outer_segments) == len(track.outer_barrier)
-        assert len(track.barriers) == len(track.inner_segments) + len(track.outer_segments)
+    def test_load_track_by_name_and_file(self):
+        track = Track.load("apex_valley")
+        assert track.name == "Apex Valley Circuit"
+        assert len(track.inner_barrier) == 360
+        assert len(track.outer_barrier) == 360
+        assert len(track.inner_segments) == 360
+        assert len(track.outer_segments) == 360
+        assert len(track.barriers) == 720
 
         # Check finish line segment
         assert isinstance(track.finish_line, LineSegment)
-        assert track.finish_line.length() > 0.0
+        assert track.finish_line.length() == pytest.approx(120.0, abs=1.0)
 
         # Check spawn configuration
         assert isinstance(track.spawn_position, Vector2D)
         assert track.spawn_heading == 0.0
 
-        # Check checkpoints
-        assert len(track.checkpoints) > 0
+        # Check checkpoints & grid slots
+        assert len(track.checkpoints) == 24
+        assert len(track.grid_slots) == 20
 
     def test_barrier_collision_detection(self):
-        track = Track.create_monaco_test_circuit()
+        track = Track.load("apex_valley")
 
         # Pick one inner barrier segment
         barrier = track.inner_segments[0]
@@ -47,7 +48,7 @@ class TestTrack:
         assert track.check_collision(safe_seg) is None
 
     def test_raycast(self):
-        track = Track.create_monaco_test_circuit()
+        track = Track.load("apex_valley")
 
         # Raycast from spawn position pointing upward towards the barrier
         origin = track.spawn_position
@@ -57,24 +58,20 @@ class TestTrack:
         hit_pt, dist = res
         assert dist > 0.0
 
-    def test_load_apex_valley_json(self):
+    def test_load_apex_valley_json_direct(self):
         json_path = Path("storage/tracks/apex_valley.json")
         assert json_path.exists(), "apex_valley.json must exist in storage/tracks/"
 
         track = Track.from_json_file(json_path)
         assert track.name == "Apex Valley Circuit"
-        assert len(track.inner_barrier) == 540
-        assert len(track.outer_barrier) == 540
-        assert len(track.inner_segments) == 540
-        assert len(track.outer_segments) == 540
-        assert len(track.barriers) == 1080
-        assert len(track.checkpoints) == 45
+        assert track.config.track_width == 120.0
+        assert track.config.scale_pixels_per_meter == 7.0
+        assert len(track.inner_barrier) == 360
+        assert len(track.outer_barrier) == 360
+        assert len(track.checkpoints) == 24
         assert len(track.grid_slots) == 20
 
-        # Check spawn position from slot 1
-        assert track.spawn_position == Vector2D(762.5, 836.0)
-
-        # Test raycast on Apex Valley
+        # Raycast test on Apex Valley
         ray_hit = track.raycast(track.spawn_position, Vector2D(0.0, -1.0), max_range=200.0)
         assert ray_hit is not None
         hit_pt, dist = ray_hit

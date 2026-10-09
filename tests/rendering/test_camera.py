@@ -33,7 +33,7 @@ class TestCamera:
         assert world_pt.y == pytest.approx(300.0)
 
     def test_fit_track(self):
-        track = Track.create_monaco_test_circuit()
+        track = Track.load("apex_valley")
         cam = Camera(viewport_width=1920, viewport_height=1080)
         cam.fit_track(track)
 
