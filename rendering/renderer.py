@@ -19,10 +19,10 @@ class Renderer:
     Strictly zero physical state mutations.
     """
 
-    COLOR_BG = (16, 18, 24)              # Sleek dark trackside terrain
+    COLOR_BG = (42, 85, 42)              # Natural racing grass terrain
     COLOR_HUD_TEXT = (235, 238, 245)
     COLOR_HUD_ACCENT = (235, 30, 40)     # F1 Red accent
-    COLOR_HUD_BG = (22, 26, 35, 220)
+    COLOR_HUD_BG = (22, 26, 35, 225)
 
     def __init__(
         self,
@@ -136,9 +136,10 @@ class Renderer:
         hud_surf.fill(self.COLOR_HUD_BG)
         pygame.draw.rect(hud_surf, (50, 56, 70), (0, 0, hud_w, hud_h), width=1, border_radius=6)
 
-        # Speed calculation (px/s to km/h scale)
-        # Using scale of ~0.55 px per meter: speed_kmh = (speed_px_s * 0.55) * 3.6
-        speed_kmh = max(0.0, primary_car.speed * world.track.config.scale_pixels_per_meter * 3.6)
+        # Speed calculation (px/s to km/h scale calibrated with top speed config)
+        scale_ppm = max(0.1, world.track.config.scale_pixels_per_meter)
+        raw_kmh = (primary_car.speed / scale_ppm) * 3.6
+        speed_kmh = min(primary_car.config.top_speed_kmh, max(0.0, raw_kmh))
         speed_text = f"{int(round(speed_kmh))}"
         speed_surf = self.font_speed.render(speed_text, True, (255, 255, 255))
         hud_surf.blit(speed_surf, (16, 12))
@@ -180,7 +181,7 @@ class Renderer:
         self.screen.blit(cam_surf, (self.width - cam_w - 20, 20))
 
         # --- Bottom-Center: Controls Hint ---
-        hint_str = "W/S/A/D or Arrows: Drive | C: Camera | R: Reset Car | F11: Fullscreen | ESC: Exit"
+        hint_str = "W/Up: Gas | SPACE / S: Brake | A/D: Steer | C: Camera | R: Reset Car | F11: Fullscreen | ESC: Exit"
         hint_surf = self.font_hint.render(hint_str, True, (160, 165, 180))
         hint_bg = hint_surf.get_rect(center=(self.width // 2, self.height - 24))
         # Draw pill

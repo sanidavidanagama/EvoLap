@@ -17,13 +17,7 @@ from simulation.world import World
 
 
 def load_circuit() -> Track:
-    """Loads Apex Valley circuit if available, otherwise built-in Monaco test circuit."""
-    track_path = Path("storage/tracks/apex_valley.json")
-    if track_path.exists():
-        try:
-            return Track.from_json_file(track_path)
-        except Exception as e:
-            print(f"[WARN] Could not load {track_path}: {e}. Falling back to Monaco.")
+    """Loads the verified Grand Prix circuit with 120px width and smooth curves."""
     return Track.create_monaco_test_circuit()
 
 
@@ -42,19 +36,15 @@ def main() -> None:
     print("EvoLap v0.1.0 — Basic Simulation & Manual Driving")
     print(f"Loaded Track: {world.track.name}")
     print("Controls:")
-    print("  W / Up Arrow    : Accelerate")
-    print("  S / Down Arrow  : Brake / Reverse")
-    print("  A / Left Arrow  : Steer Left")
-    print("  D / Right Arrow : Steer Right")
-    print("  C               : Toggle Camera (Follow Cam <-> Full Track)")
-    print("  R               : Reset Car")
-    print("  T               : Toggle Track (Apex Valley <-> Monaco)")
-    print("  F11             : Toggle Fullscreen")
-    print("  ESC             : Exit Game")
+    print("  W / Up Arrow           : Accelerate")
+    print("  SPACE / S / Down Arrow : Active Brake (Reverse Disabled)")
+    print("  A / Left Arrow         : Steer Left")
+    print("  D / Right Arrow        : Steer Right")
+    print("  C                      : Toggle Camera (Follow Cam <-> Full Track)")
+    print("  R                      : Reset Car")
+    print("  F11                    : Toggle Fullscreen")
+    print("  ESC                    : Exit Game")
     print("=" * 60)
-
-    # Alternate track cache
-    is_apex = (world.track.name == "Apex Valley Circuit")
 
     while running:
         dt = DEFAULT_DT
@@ -72,30 +62,21 @@ def main() -> None:
                     world.reset()
                 elif event.key == pygame.K_F11:
                     renderer.toggle_fullscreen()
-                elif event.key == pygame.K_t:
-                    # Switch circuit
-                    if is_apex:
-                        new_track = Track.create_monaco_test_circuit()
-                        is_apex = False
-                    else:
-                        new_track = load_circuit()
-                        is_apex = True
-                    world.track = new_track
-                    world.reset()
-                    renderer._track_fitted = False
             elif event.type == pygame.VIDEORESIZE:
                 renderer.handle_resize(event.w, event.h)
 
         # 4. Read Continuous Keyboard Driving Inputs
         keys = pygame.key.get_pressed()
+        is_accelerating = keys[pygame.K_w] or keys[pygame.K_UP]
+        is_braking = keys[pygame.K_SPACE] or keys[pygame.K_s] or keys[pygame.K_DOWN]
+
         throttle = 0.0
+        if is_accelerating:
+            throttle = 1.0
+        elif is_braking:
+            throttle = -1.0  # Decelerates to 0.0, no reverse
+
         steer = 0.0
-
-        if keys[pygame.K_w] or keys[pygame.K_UP]:
-            throttle += 1.0
-        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-            throttle -= 1.0
-
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             steer -= 1.0
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:

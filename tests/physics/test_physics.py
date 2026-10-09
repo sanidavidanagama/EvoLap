@@ -49,15 +49,28 @@ class TestVehiclePhysics:
         # Speed should decrease much faster than off-throttle drag
         assert state.speed < 50.0
 
-    def test_reverse_motion(self):
+    def test_no_reverse_motion(self):
         state = VehicleState(position=Vector2D(0.0, 0.0), heading=0.0, speed=0.0)
 
-        # Apply reverse throttle from standstill
+        # Apply brake/negative throttle from standstill: speed must remain clamped at 0.0
         for _ in range(30):
             VehicleDynamics.step(state, throttle_input=-1.0, steer_input=0.0, dt=DEFAULT_DT)
 
-        assert state.speed < 0.0
-        assert state.position.x < 0.0
+        assert state.speed == 0.0
+        assert state.position == Vector2D(0.0, 0.0)
+
+    def test_top_speed_capping(self):
+        cfg = VehicleConfig(top_speed_kmh=340.0)
+        state = VehicleState(position=Vector2D(0.0, 0.0), heading=0.0, speed=0.0)
+
+        # Full throttle for 10 seconds
+        for _ in range(600):
+            VehicleDynamics.step(state, throttle_input=1.0, steer_input=0.0, dt=DEFAULT_DT, config=cfg)
+
+        assert state.speed <= cfg.max_forward_speed
+        # Speed in km/h must not exceed configured top speed
+        speed_kmh = (state.speed / cfg.scale_px_per_meter) * 3.6
+        assert speed_kmh <= cfg.top_speed_kmh + 0.1
 
     def test_steering_build_up_and_auto_centering(self):
         state = VehicleState(position=Vector2D(0.0, 0.0), heading=0.0)

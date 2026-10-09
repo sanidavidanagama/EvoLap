@@ -15,19 +15,21 @@ class VehicleConfig:
     """Vehicle physical dimensions, powertrain, and handling parameters."""
 
     length: float = 38.0              # Chassis length (pixels)
-    width: float = 18.0               # Chassis width (pixels)
-    wheelbase: float = 28.0           # Effective distance between front/rear axles
-    max_forward_speed: float = 550.0  # Max forward speed in px/s (~300 km/h scale)
-    max_reverse_speed: float = 120.0  # Max reverse speed in px/s
-    acceleration: float = 360.0       # Full throttle longitudinal acceleration (px/s^2)
-    braking: float = 580.0            # Full braking deceleration (px/s^2)
-    engine_drag: float = 110.0        # Engine braking deceleration when off-throttle
-    rolling_resistance: float = 30.0  # Rolling resistance drag
-    air_drag_coeff: float = 0.0005    # Aerodynamic drag factor proportional to speed^2
-    max_steer_angle: float = 0.52     # ~30 degrees maximum front wheel deflection (radians)
+    width: float = 14.0               # Chassis width (pixels, F1 ratio ~2.7:1)
+    wheelbase: float = 26.0           # Effective distance between front/rear axles
+    top_speed_kmh: float = 340.0      # Maximum forward speed in km/h
+    scale_px_per_meter: float = 7.0   # Scale factor (7.0 pixels per meter)
+    max_forward_speed: float = 661.1  # Max forward speed in px/s (top_speed_kmh / 3.6 * scale_px_per_meter)
+    max_reverse_speed: float = 0.0    # Reverse disabled: minimum speed is 0.0
+    acceleration: float = 320.0       # Full throttle longitudinal acceleration (px/s^2)
+    braking: float = 620.0            # Full braking deceleration (px/s^2)
+    engine_drag: float = 120.0        # Engine braking deceleration when off-throttle
+    rolling_resistance: float = 35.0  # Rolling resistance drag
+    air_drag_coeff: float = 0.00035   # Aerodynamic drag factor proportional to speed^2
+    max_steer_angle: float = 0.50     # ~28.6 degrees maximum front wheel deflection (radians)
     steer_rate: float = 3.2           # Steer angle build-up rate (rad/s)
-    steer_return_rate: float = 5.0    # Steer centering rate when released (rad/s)
-    lateral_grip: float = 14.0        # Lateral tire grip friction damping
+    steer_return_rate: float = 5.2    # Steer centering rate when released (rad/s)
+    lateral_grip: float = 15.0        # Lateral tire grip friction damping
 
 
 @dataclass
@@ -80,7 +82,7 @@ class VehicleDynamics:
         kinematic bicycle dynamics.
         
         :param state: Mutable VehicleState to update.
-        :param throttle_input: In range [-1.0, +1.0] (+1 = gas, -1 = brake/reverse).
+        :param throttle_input: In range [-1.0, +1.0] (+1 = gas, <=0 = brake). Reverse is disabled.
         :param steer_input: In range [-1.0, +1.0] (-1 = steer left, +1 = steer right).
         :param dt: Time delta in seconds.
         :param config: Vehicle configuration parameters.
@@ -119,31 +121,29 @@ class VehicleDynamics:
             # Accelerating forward
             accel = clamped_throttle * cfg.acceleration
         elif clamped_throttle < -0.01:
-            if state.speed > 5.0:
-                # Active braking
-                accel = clamped_throttle * cfg.braking
+            # Active braking down to 0.0 (reverse is disabled)
+            if state.speed > EPSILON:
+                accel = -cfg.braking
             else:
-                # Reverse acceleration (scaled lower than forward drive)
-                accel = clamped_throttle * (cfg.acceleration * 0.45)
+                state.speed = 0.0
+                accel = 0.0
         else:
-            # Off-throttle: apply engine drag and rolling resistance
+            # Off-throttle: apply engine drag and rolling resistance down to 0
             if state.speed > EPSILON:
                 drag = cfg.engine_drag + cfg.rolling_resistance
                 accel = -min(state.speed / dt, drag)
-            elif state.speed < -EPSILON:
-                drag = cfg.engine_drag + cfg.rolling_resistance
-                accel = min(-state.speed / dt, drag)
             else:
                 state.speed = 0.0
                 accel = 0.0
 
-        # Aerodynamic air drag proportional to v^2
-        air_drag = math.copysign(cfg.air_drag_coeff * (state.speed ** 2), state.speed)
-        accel -= air_drag
+        # Aerodynamic air drag proportional to v^2 (only opposes forward motion)
+        if state.speed > EPSILON:
+            air_drag = cfg.air_drag_coeff * (state.speed ** 2)
+            accel -= air_drag
 
-        # Update forward speed and clamp to maximum envelope
+        # Update forward speed and clamp to [0.0, max_forward_speed]
         state.speed += accel * dt
-        state.speed = max(-cfg.max_reverse_speed, min(cfg.max_forward_speed, state.speed))
+        state.speed = max(0.0, min(cfg.max_forward_speed, state.speed))
 
         # Snap near-zero speeds to 0 to prevent micro-oscillation
         if abs(clamped_throttle) <= 0.01 and abs(state.speed) < 0.5:

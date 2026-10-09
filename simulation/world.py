@@ -33,14 +33,18 @@ class World:
 
     @classmethod
     def create_default(cls, track: Optional[Track] = None) -> World:
-        """Creates a simulation world with a single default player car."""
         trk = track if track is not None else Track.create_monaco_test_circuit()
+        if trk.grid_slots:
+            spawn_pos, spawn_h = trk.grid_slots[0]
+        else:
+            spawn_pos, spawn_h = trk.spawn_position, trk.spawn_heading
+
         player_car = Car.create(
             car_id=0,
             driver_name="Player",
             driver_code="PLY",
-            spawn_pos=trk.spawn_position,
-            spawn_heading=trk.spawn_heading,
+            spawn_pos=spawn_pos,
+            spawn_heading=spawn_h,
         )
         return cls(track=trk, cars=[player_car])
 

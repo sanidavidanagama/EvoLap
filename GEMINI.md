@@ -48,6 +48,19 @@ The persistence engine (`storage/`) must strictly preserve three dedicated direc
 - `storage/tracks/`: Track coordinates, barrier line segments, and checkpoint data. (eg: `tracks/barcelona.json`)
 - `storage/training/checkpoints/`: Generational checkpoints, population DNA, and training history logs.
 
+### 5. Vehicle Scale & Physics Invariants
+- **Scale Standard**: 7.0 pixels per meter (F1 car length ~38px $\approx 5.4$m, width ~14px $\approx 2.0$m).
+- **Track Width Standard**: $\ge 120$px ($\sim 17$m FIA standard) allowing multiple cars to race side-by-side.
+- **Speed Limits**: Configurable `top_speed_kmh = 340.0`. Speed must be capped and calibrated to realistic F1 velocity (never exceeding configured top speed).
+- **Controls**: Reverse is disabled (speed strictly $\ge 0.0$). Spacebar and Down/S are dedicated to active braking.
+
+---
+
+## Milestone Evolution & Backlog Notes
+
+### Planned for v0.1.1 (Targeted immediately after v0.1.0 release):
+- **Damage & Impact Degradation System**: Replace instantaneous binary elimination (`status = "Out"`) with progressive damage controls, wing/chassis degradation, speed penalties, and collision restitution.
+
 ---
 
 ## Git & Versioning Workflow

@@ -95,14 +95,16 @@ class TestWorld:
 
     def test_world_reset(self):
         world = World.create_default()
+        initial_pos = world.player_car.position
+        initial_heading = world.player_car.heading
         for _ in range(30):
             world.step(controls=(1.0, 0.0))
 
         world.reset()
         assert world.time == 0.0
         assert world.tick_count == 0
-        assert world.player_car.position == world.track.spawn_position
-        assert world.player_car.heading == world.track.spawn_heading
+        assert world.player_car.position == initial_pos
+        assert world.player_car.heading == initial_heading
         assert world.player_car.speed == 0.0
         assert world.player_car.status == "Running"
 
