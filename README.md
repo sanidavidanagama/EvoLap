@@ -49,6 +49,12 @@ Prerequisites: Python 3.11+ and [`uv`](https://docs.astral.sh/uv/).
 git clone https://github.com/sanidavidanagama/EvoLap.git
 cd EvoLap
 
+# Create a virtual environment
+uv venv
+
+# Activate the virtual environment
+.scripts/Activate
+
 # Run the simulation game directly
 uv run main.py
 ```
@@ -143,4 +149,4 @@ All **56 unit tests** verify:
 
 ## License
 
-This project is licensed under the MIT License.
+Distributed under the GNU General Public License v3.0 (GPLv3). See [`LICENSE`](LICENSE) for the full license text.
