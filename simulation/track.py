@@ -192,20 +192,31 @@ class Track:
     def load(cls, name_or_path: str | Path = "apex_valley") -> Track:
         """
         Loads a Track instance from storage/tracks/ by track ID or file path.
-        Resolves paths relative to current working directory or repository root.
+        Resolves paths relative to current working directory, repository root,
+        or frozen PyInstaller bundle directory.
         """
+        import sys
+
         p = Path(name_or_path)
         if p.is_file():
             return cls.from_json_file(p)
 
-        # Look in storage/tracks
-        candidates = [
-            Path("storage/tracks") / f"{name_or_path}.json",
-            Path("storage/tracks") / name_or_path,
-            Path(__file__).resolve().parent.parent / "storage" / "tracks" / f"{name_or_path}.json",
-            Path(__file__).resolve().parent.parent / "storage" / "tracks" / name_or_path,
-            Path(__file__).resolve().parent.parent / p,
+        # Base search directories
+        base_dirs = [
+            Path.cwd(),
+            Path(__file__).resolve().parent.parent,
         ]
+        if getattr(sys, "frozen", False):
+            if hasattr(sys, "_MEIPASS"):
+                base_dirs.insert(0, Path(sys._MEIPASS))
+            base_dirs.insert(0, Path(sys.executable).parent)
+
+        candidates = []
+        for base in base_dirs:
+            candidates.append(base / "storage" / "tracks" / f"{name_or_path}.json")
+            candidates.append(base / "storage" / "tracks" / name_or_path)
+            candidates.append(base / p)
+
         for candidate in candidates:
             if candidate.is_file():
                 return cls.from_json_file(candidate)

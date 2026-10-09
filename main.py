@@ -12,6 +12,7 @@ from core.constants import DEFAULT_DT
 from rendering.camera import Camera
 from rendering.renderer import Renderer
 from simulation.car import Car
+from simulation.controls import resolve_control_inputs
 from simulation.track import Track
 from simulation.world import World
 
@@ -33,11 +34,11 @@ def main() -> None:
     running = True
 
     print("=" * 60)
-    print("EvoLap v0.1.0 — Basic Simulation & Manual Driving")
+    print("EvoLap v0.1.1 — Basic Simulation & Manual Driving")
     print(f"Loaded Track: {world.track.name}")
     print("Controls:")
     print("  W / Up Arrow           : Accelerate")
-    print("  SPACE / S / Down Arrow : Active Brake (Reverse Disabled)")
+    print("  SPACE / S / Down Arrow : Active Brake (Reverse Disabled, Priority Over Gas)")
     print("  A / Left Arrow         : Steer Left")
     print("  D / Right Arrow        : Steer Right")
     print("  C                      : Toggle Camera (Follow Cam <-> Full Track)")
@@ -65,22 +66,14 @@ def main() -> None:
             elif event.type == pygame.VIDEORESIZE:
                 renderer.handle_resize(event.w, event.h)
 
-        # 4. Read Continuous Keyboard Driving Inputs
+        # 4. Read Continuous Keyboard Driving Inputs (Brake strictly prioritized)
         keys = pygame.key.get_pressed()
         is_accelerating = keys[pygame.K_w] or keys[pygame.K_UP]
         is_braking = keys[pygame.K_SPACE] or keys[pygame.K_s] or keys[pygame.K_DOWN]
+        steer_left = keys[pygame.K_a] or keys[pygame.K_LEFT]
+        steer_right = keys[pygame.K_d] or keys[pygame.K_RIGHT]
 
-        throttle = 0.0
-        if is_accelerating:
-            throttle = 1.0
-        elif is_braking:
-            throttle = -1.0  # Decelerates to 0.0, no reverse
-
-        steer = 0.0
-        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-            steer -= 1.0
-        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-            steer += 1.0
+        throttle, steer = resolve_control_inputs(is_accelerating, is_braking, steer_left, steer_right)
 
         # 5. Advance Headless Physics Simulation
         world.step(controls=(throttle, steer))

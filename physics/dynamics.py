@@ -8,6 +8,7 @@ from typing import Optional
 
 from core.constants import DEFAULT_DT, EPSILON
 from core.math2d import Vector2D
+from physics.steering import SteeringConfig, SteeringModel
 
 
 @dataclass(frozen=True, slots=True)
@@ -26,10 +27,11 @@ class VehicleConfig:
     engine_drag: float = 120.0        # Engine braking deceleration when off-throttle
     rolling_resistance: float = 35.0  # Rolling resistance drag
     air_drag_coeff: float = 0.00035   # Aerodynamic drag factor proportional to speed^2
-    max_steer_angle: float = 0.50     # ~28.6 degrees maximum front wheel deflection (radians)
-    steer_rate: float = 3.2           # Steer angle build-up rate (rad/s)
-    steer_return_rate: float = 5.2    # Steer centering rate when released (rad/s)
+    max_steer_angle: float = 0.50     # Default low-speed maximum front wheel deflection (radians)
+    steer_rate: float = 3.8           # Default low-speed steer build-up rate (rad/s)
+    steer_return_rate: float = 5.6    # Steer centering rate when released (rad/s)
     lateral_grip: float = 15.0        # Lateral tire grip friction damping
+    steering: SteeringConfig = field(default_factory=SteeringConfig)
 
 
 @dataclass
@@ -92,26 +94,17 @@ class VehicleDynamics:
 
         cfg = config if config is not None else VehicleConfig()
 
-        # 1. Lateral Steering Input & Front-Wheel Dynamics
-        clamped_steer_input = max(-1.0, min(1.0, steer_input))
-        target_steer = clamped_steer_input * cfg.max_steer_angle
-
-        if abs(clamped_steer_input) > 0.01:
-            # Gradual steer build-up towards target angle
-            diff = target_steer - state.steer_angle
-            max_change = cfg.steer_rate * dt
-            if abs(diff) <= max_change:
-                state.steer_angle = target_steer
-            else:
-                state.steer_angle += math.copysign(max_change, diff)
-        else:
-            # Wheels naturally auto-center when no steering input is applied
-            if abs(state.steer_angle) <= cfg.steer_return_rate * dt:
-                state.steer_angle = 0.0
-            else:
-                state.steer_angle -= math.copysign(cfg.steer_return_rate * dt, state.steer_angle)
-
-        state.steer_angle = max(-cfg.max_steer_angle, min(cfg.max_steer_angle, state.steer_angle))
+        # 1. Lateral Steering Input & Speed-Dependent Front-Wheel Dynamics
+        state.steer_angle = SteeringModel.step(
+            current_steer=state.steer_angle,
+            steer_input=steer_input,
+            speed_px_s=state.speed,
+            dt=dt,
+            wheelbase_px=cfg.wheelbase,
+            scale_px_per_m=cfg.scale_px_per_meter,
+            max_speed_px_s=cfg.max_forward_speed,
+            config=cfg.steering,
+        )
 
         # 2. Longitudinal Powertrain Dynamics (Throttle, Brake, Engine Drag)
         clamped_throttle = max(-1.0, min(1.0, throttle_input))

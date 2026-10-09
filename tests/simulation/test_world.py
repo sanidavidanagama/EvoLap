@@ -6,6 +6,7 @@ import pytest
 from core.constants import DEFAULT_DT
 from core.math2d import LineSegment, Vector2D
 from simulation.car import Car
+from simulation.controls import resolve_control_inputs
 from simulation.track import Track
 from simulation.world import World
 
@@ -130,3 +131,39 @@ class TestWorld:
         )
         res = subprocess.run([sys.executable, "-c", check_code], capture_output=True, text=True)
         assert res.returncode == 0, f"Pygame was imported by headless layers! Error: {res.stderr}"
+
+
+class TestControls:
+    def test_brake_priority_over_accelerator(self):
+        """When both accelerator and brake are pressed simultaneously, brake strictly supersedes."""
+        # Both pressed -> Brake (-1.0) must win
+        throttle, steer = resolve_control_inputs(is_accelerating=True, is_braking=True, steer_left=False, steer_right=False)
+        assert throttle == -1.0
+        assert steer == 0.0
+
+    def test_isolated_accelerator_and_brake(self):
+        # Accelerator only
+        throttle, _ = resolve_control_inputs(is_accelerating=True, is_braking=False, steer_left=False, steer_right=False)
+        assert throttle == 1.0
+
+        # Brake only
+        throttle, _ = resolve_control_inputs(is_accelerating=False, is_braking=True, steer_left=False, steer_right=False)
+        assert throttle == -1.0
+
+        # Neither
+        throttle, _ = resolve_control_inputs(is_accelerating=False, is_braking=False, steer_left=False, steer_right=False)
+        assert throttle == 0.0
+
+    def test_steering_resolution(self):
+        # Steer left only
+        _, steer = resolve_control_inputs(is_accelerating=False, is_braking=False, steer_left=True, steer_right=False)
+        assert steer == -1.0
+
+        # Steer right only
+        _, steer = resolve_control_inputs(is_accelerating=False, is_braking=False, steer_left=False, steer_right=True)
+        assert steer == 1.0
+
+        # Both left and right pressed cancel out
+        _, steer = resolve_control_inputs(is_accelerating=False, is_braking=False, steer_left=True, steer_right=True)
+        assert steer == 0.0
+
