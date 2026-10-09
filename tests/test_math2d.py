@@ -3,7 +3,7 @@
 import math
 import pytest
 
-from evolap.core.math2d import LineSegment, Vector2D
+from core.math2d import LineSegment, Vector2D
 
 
 class TestVector2D:

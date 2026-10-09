@@ -1,6 +1,6 @@
 """Core geometric primitives, vector math, and constants."""
 
-from evolap.core.constants import (
+from core.constants import (
     DEFAULT_DT,
     DEG_TO_RAD,
     EPSILON,
@@ -8,7 +8,7 @@ from evolap.core.constants import (
     MPS_TO_KMH,
     RAD_TO_DEG,
 )
-from evolap.core.math2d import LineSegment, Vector2D
+from core.math2d import LineSegment, Vector2D
 
 __all__ = [
     "DEFAULT_DT",

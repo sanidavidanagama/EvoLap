@@ -6,7 +6,7 @@ import math
 from dataclasses import dataclass
 from typing import Optional, Tuple
 
-from evolap.core.constants import EPSILON
+from core.constants import EPSILON
 
 
 @dataclass(frozen=True, slots=True)

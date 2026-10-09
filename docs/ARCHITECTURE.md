@@ -92,8 +92,7 @@ storage/
 ## 3. Directory Layout
 
 ```
-evolap/
-├── __init__.py
+EvoLap/ (project root)
 ├── core/
 │   ├── __init__.py
 │   ├── math2d.py
