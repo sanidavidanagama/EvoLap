@@ -9,3 +9,12 @@ dependencies = [
     "numpy>=2.4.6",
     "pygame-ce>=2.5.8",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+

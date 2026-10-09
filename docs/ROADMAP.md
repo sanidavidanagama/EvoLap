@@ -5,8 +5,9 @@ Each milestone builds upon decoupled engines without requiring future features t
 
 ---
 
-## v0.1.0 — Basic Simulation & Manual Driving (Current Focus)
+## v0.1.0 — Basic Simulation & Manual Driving (Completed - Released)
 
+- **Status**: Completed (2026-10-09)
 - **Scope**: Single car, single track, manual keyboard control.
 - **Engines Involved**: `core`, `physics`, `simulation`, `rendering`.
 - **Capabilities**:
