@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
-from typing import List, Optional, Tuple
+from typing import TYPE_CHECKING, List, Optional, Tuple
 
 from core.math2d import LineSegment, Vector2D
 from physics.dynamics import VehicleConfig, VehicleState
-from simulation.track import Track
+
+if TYPE_CHECKING:
+    from simulation.track import Track
 
 
 def get_vehicle_corners(
