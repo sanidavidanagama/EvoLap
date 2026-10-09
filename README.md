@@ -71,9 +71,10 @@ You can launch the compiled standalone game without needing Python or uv install
 .\dist\EvoLap\EvoLap.exe
 ```
 
-To build a fresh executable yourself:
+To build a fresh executable and release zip package yourself:
 ```powershell
-uv run pyinstaller --noconfirm --onedir --name "EvoLap" --add-data "storage;storage" main.py
+# Run the automated build script
+uv run python scripts/build.py
 ```
 
 ---
@@ -86,30 +87,34 @@ $$\text{Track Geometry} \longrightarrow \text{Simulation World} \longrightarrow 
 
 ```
 EvoLap/
-├── core/                  # Immutable 2D math (Vector2D, LineSegment) - Zero external dependencies
-├── physics/               # Vehicle dynamics, kinematic bicycle model, speed steering, collisions
-│   ├── dynamics.py        # Longitudinal powertrain, rolling drag, yaw rate, position integration
-│   ├── steering.py        # F1 speed-dependent steering limits, rack resistance, auto-centering
-│   └── collisions.py      # 4-segment OBB barrier collision detection
-├── simulation/            # Simulation state container and headless coordinator
-│   ├── track.py           # Track boundaries, barrier loops, checkpoints, Track.load() factory
-│   ├── car.py             # Car entity container with lap counters and timing
-│   ├── controls.py        # Control input resolution (brake priority invariant)
-│   └── world.py           # Fixed-timestep (dt=1/60s) headless simulation coordinator
-├── rendering/             # Visual observer layer (Pygame-ce)
-│   ├── renderer.py        # Visual frame compositor with grass striping, asphalt, Armco barriers
-│   ├── camera.py          # World-to-screen coordinate transforms, Follow & Full-Track modes
-│   ├── car_view.py        # Top-down F1 chassis with steerable wheels and wings
-│   └── track_view.py      # Asphalt polygon rasterization, kerbs, and barrier rails
-├── storage/               # Persistent track data, model weights, and checkpoints
-│   └── tracks/            # JSON circuit definitions (e.g. apex_valley.json)
-├── tests/                 # Comprehensive test suite mirroring source architecture
-│   ├── core/              # Unit tests for Vector2D and LineSegment
-│   ├── physics/           # Unit tests for dynamics, steering kinematics, collisions, determinism
-│   ├── simulation/        # Unit tests for Track, Car, World, and control priority
-│   └── rendering/         # Unit tests for Camera coordinate transformations
-├── docs/                  # Architectural specs, milestones, and version roadmap
-└── main.py                # Main application loop assembling Input -> World -> Renderer
+├── assets/                 # Branding assets (favicon.ico, favicon.png)
+├── core/                   # Immutable 2D math (Vector2D, LineSegment) - Zero external dependencies
+├── physics/                # Vehicle dynamics, kinematic bicycle model, speed steering, collisions
+│   ├── dynamics.py         # Longitudinal powertrain, rolling drag, yaw rate, position integration
+│   ├── steering.py         # F1 speed-dependent steering limits, rack resistance, auto-centering
+│   └── collisions.py       # 4-segment OBB barrier collision detection
+├── simulation/             # Simulation state container and headless coordinator
+│   ├── track.py            # Track boundaries, barrier loops, checkpoints, Track.load() factory
+│   ├── car.py              # Car entity container with lap counters and timing
+│   ├── controls.py         # Control input resolution (brake priority invariant)
+│   └── world.py            # Fixed-timestep (dt=1/60s) headless simulation coordinator
+├── rendering/              # Visual observer layer (Pygame-ce)
+│   ├── renderer.py         # Visual frame compositor with grass striping, asphalt, Armco barriers
+│   ├── camera.py           # World-to-screen coordinate transforms, Follow & Full-Track modes
+│   ├── car_view.py         # Top-down F1 chassis with steerable wheels and wings
+│   └── track_view.py       # Asphalt polygon rasterization, kerbs, and barrier rails
+├── storage/                # Persistent track data, model weights, and checkpoints
+│   └── tracks/             # JSON circuit definitions (e.g. apex_valley.json)
+├── scripts/                # Build and distribution automation scripts
+│   └── build.py            # Automated PyInstaller compilation and zip packager
+├── tests/                  # Comprehensive test suite mirroring source architecture
+│   ├── core/               # Unit tests for Vector2D and LineSegment
+│   ├── physics/            # Unit tests for dynamics, steering kinematics, collisions, determinism
+│   ├── simulation/         # Unit tests for Track, Car, World, and control priority
+│   └── rendering/          # Unit tests for Camera coordinate transformations
+├── docs/                   # Architectural specs, milestones, and version roadmap
+├── .github/workflows/      # Continuous Integration (CI) test & build automation
+└── main.py                 # Main application loop assembling Input -> World -> Renderer
 ```
 
 ### Key Invariants
