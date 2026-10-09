@@ -6,8 +6,8 @@ Welcome to **EvoLap**. This document contains mandatory architectural invariants
 
 ## Active Milestone (Read This First)
 
-- **Currently Developing Milestone**: [`docs/milestones/v0.1.0-basic-simulation.md`](file:///c:/Users/sanid/VS%20Code%20Projects/EvoLap/docs/milestones/v0.1.0-basic-simulation.md)
-- **Scope Rule**: Strictly adhere to the checklist in the active milestone document. **Do not implement features belonging to future milestones** (e.g., do not add neural networks, sidebars, or genetic algorithms during v0.1.0).
+- **Currently Developing Milestone**: [`docs/milestones/v0.1.1-smooth-steering.md`](file:///c:/Users/sanid/VS%20Code%20Projects/EvoLap/docs/milestones/v0.1.1-smooth-steering.md)
+- **Scope Rule**: Strictly adhere to the checklist in the active milestone document. **Do not implement features belonging to future milestones** (e.g., do not add neural networks, sidebars, or genetic algorithms during v0.1.1).
 
 ---
 
@@ -30,15 +30,15 @@ $$\text{Track Geometry} \to \text{Simulation World} \to \text{Physics Engine} \t
 
 ### 2. Zero Pygame in Headless Layers (Strict Decoupling)
 - The following modules must **NEVER import `pygame` or `rendering`**:
-  - `evolap/core/`
-  - `evolap/physics/`
-  - `evolap/simulation/`
-  - `evolap/neural_engine/`
-  - `evolap/training/`
+  - `core/`
+  - `physics/`
+  - `simulation/`
+  - `neural_engine/`
+  - `training/`
 - Every simulation step must be executable in a pure console script without launching an OS window or initializing display drivers.
 
 ### 3. Neural Engine is an Independent Sub-Product
-- Located in `evolap/neural_engine/`.
+- Located in `neural_engine/`.
 - Designed as a standalone, scalable sub-product with independent semantic subversioning (e.g., `Neural Engine v1.0.0`).
 - Operates on pure NumPy for vector math and neural inference.
 
@@ -47,6 +47,25 @@ The persistence engine (`storage/`) must strictly preserve three dedicated direc
 - `storage/models/`: Serialized neural network weights and model metadata.
 - `storage/tracks/`: Track coordinates, barrier line segments, and checkpoint data. (eg: `tracks/barcelona.json`)
 - `storage/training/checkpoints/`: Generational checkpoints, population DNA, and training history logs.
+
+### 5. Vehicle Scale & Physics Invariants
+- **Scale Standard**: 7.0 pixels per meter (F1 car length ~38px $\approx 5.4$m, width ~14px $\approx 2.0$m).
+- **Track Width Standard**: $\ge 120$px ($\sim 17$m FIA standard) allowing multiple cars to race side-by-side.
+- **Speed Limits**: Configurable `top_speed_kmh = 340.0`. Speed must be capped and calibrated to realistic F1 velocity (never exceeding configured top speed).
+- **Controls**: Reverse is disabled (speed strictly $\ge 0.0$). Spacebar and Down/S are dedicated to active braking.
+
+---
+
+## Milestone Evolution & Backlog Notes
+
+### Planned for v0.1.1 (Targeted immediately after v0.1.0 release):
+- **Smooth Speed-Dependent Steering (F1 Kinematics)**: 
+  - Dynamic steering response inversely scaled with vehicle speed.
+  - Low speeds: full steering lock available for sharp hairpins and slow maneuvers.
+  - High speeds: steering deflection is dynamically constrained and smoothed so full ($\pm 1.0$) input produces only high-speed, stable micro-adjustments rather than violent snap oversteer, mirroring real Formula 1 aerodynamic loading and physical steering resistance.
+
+### Planned for v0.1.2+:
+- **Damage & Impact Degradation System**: Progressive wing/chassis degradation, speed penalties, and collision restitution replacing instantaneous binary elimination (`status = "Out"`).
 
 ---
 
