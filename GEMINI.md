@@ -59,7 +59,13 @@ The persistence engine (`storage/`) must strictly preserve three dedicated direc
 ## Milestone Evolution & Backlog Notes
 
 ### Planned for v0.1.1 (Targeted immediately after v0.1.0 release):
-- **Damage & Impact Degradation System**: Replace instantaneous binary elimination (`status = "Out"`) with progressive damage controls, wing/chassis degradation, speed penalties, and collision restitution.
+- **Smooth Speed-Dependent Steering (F1 Kinematics)**: 
+  - Dynamic steering response inversely scaled with vehicle speed.
+  - Low speeds: full steering lock available for sharp hairpins and slow maneuvers.
+  - High speeds: steering deflection is dynamically constrained and smoothed so full ($\pm 1.0$) input produces only high-speed, stable micro-adjustments rather than violent snap oversteer, mirroring real Formula 1 aerodynamic loading and physical steering resistance.
+
+### Planned for v0.1.2+:
+- **Damage & Impact Degradation System**: Progressive wing/chassis degradation, speed penalties, and collision restitution replacing instantaneous binary elimination (`status = "Out"`).
 
 ---
 
