@@ -118,6 +118,13 @@ class TestWorld:
         assert car2.speed == 0.0
 
     def test_zero_pygame_dependency(self):
-        """Verifies strictly zero pygame import across core, physics, and simulation."""
-        # Check that 'pygame' is not present in sys.modules
-        assert "pygame" not in sys.modules
+        """Verifies strictly zero pygame import across core, physics, and simulation in an isolated process."""
+        import subprocess
+
+        check_code = (
+            "import sys; "
+            "import core, physics, simulation; "
+            "assert 'pygame' not in sys.modules, f'Pygame was imported by headless layers: {sys.modules.get(\"pygame\")}'"
+        )
+        res = subprocess.run([sys.executable, "-c", check_code], capture_output=True, text=True)
+        assert res.returncode == 0, f"Pygame was imported by headless layers! Error: {res.stderr}"
