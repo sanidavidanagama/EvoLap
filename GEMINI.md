@@ -6,8 +6,9 @@ Welcome to **EvoLap**. This document contains mandatory architectural invariants
 
 ## Active Milestone (Read This First)
 
-- **Currently Developing Milestone**: [`docs/milestones/v0.1.1-smooth-steering.md`](file:///c:/Users/sanid/VS%20Code%20Projects/EvoLap/docs/milestones/v0.1.1-smooth-steering.md)
-- **Scope Rule**: Strictly adhere to the checklist in the active milestone document. **Do not implement features belonging to future milestones** (e.g., do not add neural networks, sidebars, or genetic algorithms during v0.1.1).
+- **Completed & Released**: `v0.1.0` (Basic Sim) & `v0.1.1` (Smooth Steering, Standalone Build, CI Pipeline).
+- **Upcoming Milestone**: `v0.2.0` — Neural Engine & Multi-Car Simulation (or `v0.1.2` Damage Degradation). Check with the user upon kickoff.
+- **Scope Rule**: Strictly adhere to the checklist in the active milestone document. **Do not implement features belonging to future milestones** (e.g., do not add genetic training loops or menu laboratory during v0.2.0).
 
 ---
 
