@@ -61,16 +61,20 @@ The persistence engine (`storage/`) must strictly preserve three dedicated direc
 ### Completed in v0.1.1:
 - **Smooth Speed-Dependent Steering (F1 Kinematics)**: Full steering lock at low speeds tapering down to micro-adjustments at top speed.
 - **Active Brake Priority**: Dedicated braking input strictly prioritized over throttle.
-- **Branding & Standalone Build**: Added custom favicon application icons, standalone executable compilation script (`scripts/build.py`), and CI workflow.
+- **Branding & Standalone Build**: Added custom favicon application icons and standalone executable compilation script (`scripts/build.py`).
+- **CI Pipeline Streamlining & Release Separation**:
+  - Restructured `.github/workflows/ci.yml` into a lightweight, fast Ubuntu test runner (<30s runtime).
+  - Added concurrency cancellation (`cancel-in-progress: true`) and doc change filtering (`paths-ignore`).
+  - Separated executable compilation into a dedicated tag-triggered `release.yml` (`v*`) to eliminate redundant matrix and Windows runner queue consumption across routine dev pushes and PRs.
 
 ### Planned for v0.1.2+:
 - **Damage & Impact Degradation System**: Progressive wing/chassis degradation, speed penalties, and collision restitution replacing instantaneous binary elimination (`status = "Out"`).
 
-### Planned for v0.2.0 (Neural Engine & CI Optimization):
-- **CI Pipeline Streamlining & Release Separation**:
-  - Restructure `.github/workflows/ci.yml` into a lightweight, fast Ubuntu test runner (<30s runtime).
-  - Add concurrency cancellation (`cancel-in-progress: true`) and doc change filtering (`paths-ignore`).
-  - Separate executable compilation into a dedicated tag-triggered `release.yml` (`v*`) to eliminate redundant matrix and Windows runner queue consumption across routine dev pushes and PRs.
+### Planned for v0.2.0 (Neural Engine & Multi-Car Simulation):
+- Multi-car starting grid (F1 zig-zag staggered placement).
+- 5-raycast sensor perception vector ($D_1 \dots D_5$) + speed + heading.
+- MLP forward pass inference per car per tick (434 weights).
+- Standings and Telemetry UI overlays.
 
 ---
 

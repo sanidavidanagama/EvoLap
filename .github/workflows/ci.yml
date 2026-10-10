@@ -3,53 +3,36 @@ name: CI
 on:
   push:
     branches: [main, dev]
+    paths-ignore:
+      - "docs/**"
+      - "README.md"
+      - "CHANGELOG.md"
+      - "LICENSE"
+      - "GEMINI.md"
+      - ".gitignore"
   pull_request:
     branches: [main, dev]
+    paths-ignore:
+      - "docs/**"
+      - "README.md"
+      - "CHANGELOG.md"
+      - "LICENSE"
+      - "GEMINI.md"
+      - ".gitignore"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
-    name: Test & Verify (${{ matrix.os }} - Python ${{ matrix.python-version }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-        python-version: ["3.11", "3.12"]
-
+    name: Headless Simulation & Unit Tests (Ubuntu)
+    runs-on: ubuntu-latest
     env:
       SDL_VIDEODRIVER: "dummy"
       SDL_AUDIODRIVER: "dummy"
       PYTHONUNBUFFERED: "1"
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-          version: "latest"
-
-      - name: Set up Python ${{ matrix.python-version }}
-        run: uv python install ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: uv sync --all-groups
-
-      - name: Check bytecode compilation
-        run: uv run python -m compileall -q core physics simulation rendering tests scripts main.py
-
-      - name: Verify headless deterministic physics
-        run: uv run python tests/physics/verify_physics_headless.py
-
-      - name: Run unit test suite
-        run: uv run pytest -v
-
-  build:
-    name: Build Standalone Executable (Windows)
-    needs: test
-    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -66,12 +49,11 @@ jobs:
       - name: Install dependencies
         run: uv sync --all-groups
 
-      - name: Build standalone release bundle
-        run: uv run python scripts/build.py
+      - name: Check bytecode compilation
+        run: uv run python -m compileall -q core physics simulation rendering tests scripts main.py
 
-      - name: Upload Windows build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: EvoLap-windows-x64-bundle
-          path: dist/*.zip
-          if-no-files-found: error
+      - name: Verify headless deterministic physics
+        run: uv run python tests/physics/verify_physics_headless.py
+
+      - name: Run unit test suite
+        run: uv run pytest -v
